@@ -1,84 +1,85 @@
 import RestaurantCard from "./RestaurantCard";
-
 import { CiSearch } from "react-icons/ci";
 import { useState, useEffect } from "react";
+import { SWIGGY_URL } from "../utils/constants";
 import Shimmer from "./Shimmer";
-
-
+import { Link } from "react-router-dom";
 
 const Body = () => {
-
-    //local State Variable - super powerful variable
-    const [listOfRestaurants, setlistOfRestaurants] = useState([]);
-    const [filteredRestaurantsData, setfilteredRestaurantsData] = useState([]);
-
-    const [searchText, setsearchText] = useState("");
+    const [listOfRestaurants, setListOfRestaurants] = useState([]);
+    const [filteredRestaurantsData, setFilteredRestaurantsData] = useState([]);
+    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
-        fetchData()
+        fetchData();
     }, []);
 
     const fetchData = async () => {
-        const data = await fetch(
-            "https://www.swiggy.com/dapi/restaurants/list/v5?lat=17.773521&lng=83.242101&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-        )
-
+        const data = await fetch(SWIGGY_URL);
         const json = await data.json();
-       console.log(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-
-        setlistOfRestaurants(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants)
-        setfilteredRestaurantsData(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants)
+        const restaurants = json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+        
+        setListOfRestaurants(restaurants);
+        setFilteredRestaurantsData(restaurants);
     };
 
-    // //Conditional Rendering 
-    // if (listOfRestaurants.length  === 0) {
-    //     return <Shimmer/>
-    // }
+    // Function to filter dynamically as user types
+    const handleSearchChange = (e) => {
+        const query = e.target.value.toLowerCase();
+        setSearchText(query);
+        
+        const filtered = listOfRestaurants.filter((res) =>
+            res.info.name.toLowerCase().includes(query)
+        );
+        setFilteredRestaurantsData(filtered);
+    };
 
-    // using ternary operator
-    return listOfRestaurants.length === 0 ? (<Shimmer />) : (
+    // Function to filter when Enter is pressed
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+            const filtered = listOfRestaurants.filter((res) =>
+                res.info.name.toLowerCase().includes(searchText)
+            );
+            setFilteredRestaurantsData(filtered);
+        }
+    };
+
+    return listOfRestaurants.length === 0 ? (
+        <Shimmer />
+    ) : (
         <div>
             <div className="input-search">
-                <input type="text" placeholder="Search" 
-                className="search-box" value={searchText}
-                onChange={(e) => {
-                    setsearchText(e.target.value)
-                }}
+                <input
+                    type="text"
+                    placeholder="Search"
+                    className="search-box"
+                    value={searchText}
+                    onChange={handleSearchChange}
+                    onKeyPress={handleKeyPress} // Enter key filtering
                 />
-                <CiSearch className="search-icon" 
-                onClick={() => {
-
-                    const filteredRestaurants = listOfRestaurants.filter((res) => 
-                        res.info.name.toLowerCase().includes(searchText.toLowerCase())
-                    );
-
-                    setfilteredRestaurantsData(filteredRestaurants)
-                    console.log(filteredRestaurants)
-                }}
-                />
+                <CiSearch className="search-icon" onClick={() => handleKeyPress({ key: "Enter" })} />
             </div>
-            <div>
+            <div className="topres-btn">
                 <button
-                    className="topres-btn"
                     onClick={() => {
                         const filteredData = listOfRestaurants.filter(
                             (res) => res.info.avgRating > 4.3
-                        )
-                        setfilteredRestaurantsData(filteredData);
+                        );
+                        setFilteredRestaurantsData(filteredData);
                     }}
                 >
                     4.3 - 5.0
                 </button>
             </div>
             <div className="res-container">
-                {
-                    filteredRestaurantsData.map((restaurant) => (
-                        <RestaurantCard key={restaurant.info.id} resData={restaurant} />
-                    ))
-                }
+                {filteredRestaurantsData.map((restaurant) => (
+                    <Link key={restaurant.info.id} to={"/restaurants/" + restaurant.info.id}>
+                        <RestaurantCard resData={restaurant} />
+                    </Link>
+                ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Body;

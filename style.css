@@ -140,3 +140,13 @@ button {
     margin: 20px;
     cursor: pointer;
 }
+
+.topres-btn{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.topres-btn > button{
+    padding: 6px;
+}

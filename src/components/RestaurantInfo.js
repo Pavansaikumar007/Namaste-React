@@ -1,34 +1,23 @@
 import { useEffect, useState } from "react";
+import { RESTAURANTS_URL } from "../utils/constants";
 import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
-import { RESTAURANTS_URL } from "../utils/constants";
+import { useRestaurantMenu } from "/src/utils/useRestaurantMenu";
+
 
 
 const RestaurantInfo = () => {
 
-    const [resInfo, setresInfo] = useState(null);
+    const { resId } = useParams();
 
-    const {resId} = useParams();
-    // console.log(resId)
-
-    useEffect(() => {
-        fetchData();
-    }, [])
-
-    const fetchData = async () => {
-        const data = await fetch(RESTAURANTS_URL + resId);
-        const json = await data.json();
-
-        // console.log(json?.data?.cards[2].card?.card?.info?.name);
-        setresInfo(json.data)
-    }
+    const resInfo = useRestaurantMenu(resId);
 
     if (resInfo === null) return (<Shimmer />);
 
     // const { name, avgRating } = resInfo?.cards[2]?.card?.card?.info;
     const { name, avgRating, costForTwoMessage, cuisines, sla } = resInfo?.cards[2]?.card?.card?.info;
 
-    const { itemCards } = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card;
+    const { itemCards } = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card || resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card || resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[3]?.card?.card?.categories;
 
     // const resCardData = (resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card?.itemCards[0]?.card?.info?.name)
     // console.log(resCardData)
@@ -50,7 +39,7 @@ const RestaurantInfo = () => {
                 <ul>
                     {itemCards.map((items) => (
                         <li key={items.card?.info?.id}>{items.card?.info?.name} - {"Rs."}
-                        {items.card?.info?.price / 100}
+                            {items.card?.info?.price / 100}
                         </li>
                     ))}
                 </ul>

@@ -27,14 +27,14 @@ export class UserClass extends React.Component {
 
         return (
             <div className="Class-Component">
-                <h1>Count = {this.state.count}</h1>
+                <h1 className=" font-extrabold">Count = {this.state.count}</h1>
                 <button onClick={() => {
                     this.setState({
                         count: this.state.count + 1,
                     })
                 }}>
                     Count Increase</button>
-                <h2>Name : {name}</h2>
+                <h2 className=" font-bold">Name : {name}</h2>
                 <h3>Location : {location}</h3>
                 <h3>Role : Frontend</h3>
             </div>

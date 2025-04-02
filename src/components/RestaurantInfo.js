@@ -24,7 +24,7 @@ const RestaurantInfo = () => {
 
     return (
         <div>
-            <h1>{name}</h1>
+            <h1 className=" font-bold">{name}</h1>
             <h3>{avgRating} {costForTwoMessage}</h3>
             <p>{cuisines.join(',')}</p>
             <p>{sla.slaString}</p>

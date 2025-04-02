@@ -61,19 +61,21 @@ const Body = () => {
         <Shimmer />
     ) : (
         <div>
-            <div className="input-search">
+            <div className="flex justify-center items-center p-4 relative">
                 <input
                     type="text"
-                    placeholder="Search"
-                    className="search-box"
+                    placeholder="Search for restaurants and food"
+                    className=" px-8 py-2 w-[60%] border-1 border-[#BEBFC5] font-medium outline-0"
                     value={searchText}
                     onChange={handleSearchChange}
                     onKeyPress={handleKeyPress} // Enter key filtering
                 />
-                <CiSearch className="search-icon" onClick={() => handleKeyPress({ key: "Enter" })} />
+                <CiSearch className=" text-2xl cursor-pointer absolute right-69" 
+                onClick={() => handleKeyPress({ key: "Enter" })} />
             </div>
-            <div className="topres-btn">
+            <div className="  flex justify-center ">
                 <button
+                className="bg-green-500 px-3 py-1.5 m-2 rounded-lg cursor-pointer hover:shadow-[0_0px_5px_rgba(0,0,0,0.8)]"
                     onClick={() => {
                         const filteredData = listOfRestaurants.filter(
                             (res) => res.info.avgRating > 4.3
@@ -84,7 +86,8 @@ const Body = () => {
                     4.3 - 5.0
                 </button>
             </div>
-            <div className="res-container">
+
+            <div className="flex flex-wrap ml-[50px] ">
                 {filteredRestaurantsData.map((restaurant) => (
                     <Link key={restaurant.info.id} to={"/restaurants/" + restaurant.info.id}>
                         <RestaurantCard resData={restaurant} />

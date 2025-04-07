@@ -1,8 +1,9 @@
 import logo from "/images/logo.png";
 import { FaShoppingCart } from "react-icons/fa";
-import { useState } from "react";
+import {  useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { useOnlineStatus } from "../utils/useOnlineStatus";
+import userContext from "../utils/userContext";
 
 // let btnName = "Login"
 
@@ -15,6 +16,9 @@ const Header = () => {
     // console.log("header rendered");
 
     const onlineStatus = useOnlineStatus();
+
+    const data = useContext(userContext);
+    console.log(data)
 
 
     return (
@@ -34,11 +38,11 @@ const Header = () => {
                     <li className=" mt-1.5"><FaShoppingCart className="cart-icon" /></li>
                     <button className=" hover:text-[#FF5200] " 
                     onClick={() => {
-
                         dynamicBtn === "Login" ? setdynamicBtn("LogOut") : setdynamicBtn("Login")
                     }}>
                         {dynamicBtn}
                     </button>
+                    <li>{data.loggedInUser}</li>
                 </ul>
             </div>
         </div>

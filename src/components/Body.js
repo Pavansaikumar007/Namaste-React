@@ -12,6 +12,8 @@ const Body = () => {
     const [filteredRestaurantsData, setFilteredRestaurantsData] = useState([]);
     const [searchText, setSearchText] = useState("");
 
+    //console.log(listOfRestaurants)
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -21,10 +23,9 @@ const Body = () => {
         const json = await data.json();
         // const restaurants = json?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants || json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
 
-        const restaurants = json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+        const restaurants = json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants || json?.data?.cards[3]?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
 
-        //console.log(restaurants)
-        
+        console.log(restaurants)
         setListOfRestaurants(restaurants);
         setFilteredRestaurantsData(restaurants);
     };
@@ -33,7 +34,7 @@ const Body = () => {
     const handleSearchChange = (e) => {
         const query = e.target.value.toLowerCase();
         setSearchText(query);
-        
+
         const filtered = listOfRestaurants.filter((res) =>
             res.info.name.toLowerCase().includes(query)
         );
@@ -53,7 +54,7 @@ const Body = () => {
     const onlineStatus = useOnlineStatus();
 
 
-    if(onlineStatus === false) {
+    if (onlineStatus === false) {
         return <h1>you're offline. Please check your internet</h1>
     }
 
@@ -70,12 +71,12 @@ const Body = () => {
                     onChange={handleSearchChange}
                     onKeyPress={handleKeyPress} // Enter key filtering
                 />
-                <CiSearch className=" text-2xl cursor-pointer absolute right-69" 
-                onClick={() => handleKeyPress({ key: "Enter" })} />
+                <CiSearch className=" text-2xl cursor-pointer absolute right-69"
+                    onClick={() => handleKeyPress({ key: "Enter" })} />
             </div>
             <div className="  flex justify-center ">
                 <button
-                className="bg-green-500 px-3 py-1.5 m-2 rounded-lg cursor-pointer hover:shadow-[0_0px_5px_rgba(0,0,0,0.8)]"
+                    className="bg-green-500 px-3 py-1.5 m-2 rounded-lg cursor-pointer hover:shadow-[0_0px_5px_rgba(0,0,0,0.8)]"
                     onClick={() => {
                         const filteredData = listOfRestaurants.filter(
                             (res) => res.info.avgRating > 4.3

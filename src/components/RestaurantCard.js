@@ -14,9 +14,12 @@ const RestaurantCard = (props) => {
                 {<img src={CDN_URL + cloudinaryImageId} alt="res-image" className="min-w-[272px] max-width-[273px] h-[182px] object-cover rounded-[20px]" />}
             </div>
             <div className="card-items">
-                <h3 className=" font-bold">{name}</h3>
+                <h3 className=" font-[700] text-[20px] py-2">
+                    {name.length > 22 ? name.slice(0, 22) + "..." : name}</h3>
                 <h4><i></i>{avgRating} • {sla.slaString} </h4>
-                <p>{cuisines.join(", ")}</p>
+                <p>{cuisines.join(", ").length > 22
+                    ? cuisines.join(", ").slice(0, 30) + "..."
+                    : cuisines.join(", ")} </p>
                 <p>{areaName}</p>
             </div>
         </div>
